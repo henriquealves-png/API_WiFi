@@ -1,6 +1,10 @@
 #include <Arduino.h>
 #include <WiFi.h>
 #include <HTTPClient.h>
+#include <LiquidCrystal_I2C.h>
+
+LiquidCrystal_I2C lcd(0x27 , 20 ,4);
+
 
 const char* nomeRedeWiFi = "SENAI EDUCACIONAL";
 const char* senhaRedeWiFi = "info@134";
