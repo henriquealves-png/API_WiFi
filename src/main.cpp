@@ -24,14 +24,14 @@ void setup()
 {
   Serial.begin(115200);
   
-  // Inicialização do LCD
+  //!============Inicialização do LCD==================
   lcd.init();
   lcd.backlight();
   lcd.clear();
   lcd.setCursor(0, 0);
   lcd.print("Conectando WiFi...");
 
-  // Conexão WiFi
+  //! ===========Conexão WiFi===================
   WiFi.begin(nomeRedeWiFi, senhaRedeWiFi);
   Serial.print("\n\rIniciando conexao WiFi\n\r");
 
@@ -46,7 +46,7 @@ void setup()
 
   //*------- CONFIGURACAO DE HORA NTP --------------
   configTzTime(FUSO, NTP1, NTP2);
-  sntp_set_sync_interval(24 * 60 * 60 * 1000); // Movid do local correto (APÓS configTzTime)
+  sntp_set_sync_interval(24 * 60 * 60 * 1000);
 
   struct tm agora;
   Serial.print("\n\rSincronizando hora\n\r");
@@ -88,36 +88,36 @@ void loop()
                   (long)time(nullptr));
   }
 
-  // Consulta à API de clima
+  //!==========Consulta à API de clima=======================
   String clima = pedirParaApiClima("%c");
   int temperatura = pedirParaApiClima("%t").toInt();
   int sensacaoTermica = pedirParaApiClima("%f").toInt();
   int umidade = pedirParaApiClima("%h").toInt();
 
-  // Atualização do display LCD
+  //!==========Atualização do display LCD====================
   lcd.clear();
   
-  // Linha 0: Dia da semana e Hora
+  // Dia da semana e Hora->ln 01 lcd
   lcd.setCursor(0, 0);
   lcd.printf("%s %02d:%02d:%02d", DIAS[agora.tm_wday], agora.tm_hour, agora.tm_min, agora.tm_sec);
 
-  // Linha 1: Descrição do Clima
+  // Descrição do Clima->ln 02 lcd
   lcd.setCursor(0, 1);
   if (clima.length() > 0) {
-    lcd.printf("Clima: %.13s", clima.c_str()); // Limita a 13 caracteres para caber na tela
+    lcd.printf("Clima: %.13s", clima.c_str());
   } else {
     lcd.print("Clima: Indisponivel");
   }
 
-  // Linha 2: Temperatura e Sensação
+  // Temperatura e Sensação->ln 03 lcd
   lcd.setCursor(0, 2);
   lcd.printf("Temp: %dC (ST: %dC)", temperatura, sensacaoTermica);
 
-  // Linha 3: Umidade do ar
+  // Umidade -> ln 04 do lcd
   lcd.setCursor(0, 3);
   lcd.printf("Umidade: %d%%", umidade);
 
-  // Aguarda 10 segundos antes da próxima atualização
+  // 10 segundos p/ próxima atualização
   delay(10000); 
 }
 
@@ -125,7 +125,7 @@ String pedirParaApiClima(String codigo)
 {
   HTTPClient http;
   http.begin(enderecoAPI + codigo);
-  http.setTimeout(3000); // Timeout de 3 segundos para evitar travamento da tela
+  http.setTimeout(3000); 
 
   int codigoHTTP = http.GET();
   String resposta = "";
